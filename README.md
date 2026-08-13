@@ -8,6 +8,43 @@ and shown live alongside a debug view of your eye tracking. The Pi 5 also
 hosts its own Wi-Fi access point so the camera Pi has a network to join
 without depending on any external router.
 
+## Why this matters
+
+Eye movement is one of the fastest, most involuntary signals the human body
+produces — you look at something before you reach for it, click on it, or
+speak about it. That makes gaze a uniquely fast and low-effort control
+channel, but it's almost entirely locked behind expensive, specialized
+hardware today: commercial eye trackers (Tobii and similar systems) commonly
+cost anywhere from several hundred to several thousand dollars, which puts
+gaze-based control out of reach for most individuals, schools, and
+independent researchers.
+
+This project is a small-scale demonstration that a webcam and two Raspberry
+Pis — maybe $150 in parts — can reproduce the core loop of a gaze-controlled
+system: detect where someone is looking, and move a physical device there in
+real time. It's not a substitute for a clinical-grade eye tracker, but it
+shows that the underlying idea doesn't require one. That has real
+implications:
+
+- **Accessibility.** People with limited hand or arm mobility (e.g. ALS,
+  spinal cord injuries, muscular dystrophy) are a primary use case for
+  commercial eye-tracking systems — for controlling a computer, a
+  communication device, or a powered wheelchair camera. Showing that a
+  low-cost, open version of the underlying pipeline works is a step toward
+  making that kind of control cheaper and more accessible.
+- **Robotics & HCI.** Gaze is a natural fit for hands-free teleoperation —
+  aiming a camera, a telepresence robot, or a drone gimbal just by looking,
+  freeing the hands for other controls entirely.
+- **Education & research.** Because it's built entirely from open-source
+  tools (`dlib`, `OpenCV`) and commodity hardware, the whole pipeline is
+  something a student or hobbyist can inspect, modify, and build on, instead
+  of a closed commercial black box.
+
+The specific rig — a pan/tilt camera — is just the clearest, most visible way
+to prove the concept works end to end. The broader point is that gaze-based
+control doesn't have to be expensive or exotic to be functional, and that's
+what this project sets out to show.
+
 ## How it works
 
 ```mermaid
@@ -48,7 +85,7 @@ flowchart LR
   - Receives the camera Pi's H264 video stream over UDP, decodes it with PyAV, and
     serves both the remote camera feed and the gaze-tracking debug feed as MJPEG
     streams over a small Flask web UI.
-  - Also runs a WebSocket server for relaying control commands to
+  - Also runs a WebSocket server for relaying ad-hoc manual control commands to
     the Pi.
   - Hosts its own Wi-Fi access point (via `hostapd` + `dnsmasq`) so the camera
     Pi has a network to connect to directly — see [Wi-Fi access point setup](#wi-fi-access-point-setup-on-the-pi-5)
@@ -205,6 +242,7 @@ Both `VIDEO_PORT` and `CONTROL_PORT` must match between the two files.
   not a calibrated eye-tracking model — accuracy depends heavily on lighting
   and webcam angle.
 - There's no encryption or authentication on the UDP video/control channels or
-  the WebSocket relay beyond the Wi-Fi AP's WPA2 password
+  the WebSocket relay beyond the Wi-Fi AP's WPA2 password; this is intended
+  for a trusted local network, not the open internet.
 - If no face is detected, the gaze offset resets to center and the rig stops
   moving until a face is found again.
