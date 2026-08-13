@@ -12,19 +12,18 @@ without depending on any external router.
 
 Eye movement is one of the fastest, most involuntary signals the human body
 produces — you look at something before you reach for it, click on it, or
-speak about it. That makes gaze a uniquely fast and low-effort control
+speak about it. That makes gaze a fast and low-effort control
 channel, but it's almost entirely locked behind expensive, specialized
 hardware today: commercial eye trackers (Tobii and similar systems) commonly
 cost anywhere from several hundred to several thousand dollars, which puts
 gaze-based control out of reach for most individuals, schools, and
 independent researchers.
 
-This project is a small-scale demonstration that a webcam and two Raspberry
-Pis — maybe $150 in parts — can reproduce the core loop of a gaze-controlled
-system: detect where someone is looking, and move a physical device there in
-real time. It's not a substitute for a clinical-grade eye tracker, but it
-shows that the underlying idea doesn't require one. That has real
-implications:
+This project is a small-scale demonstration that a webcam and two Raspberry can
+reproduce the core loop of a gaze-controlled system: detect where someone is 
+looking, and move a physical device there in real time. It's not a substitute
+for a clinical-grade eye tracker, but it shows that the underlying idea
+doesn't require one. That has real implications:
 
 - **Accessibility.** People with limited hand or arm mobility (e.g. ALS,
   spinal cord injuries, muscular dystrophy) are a primary use case for
@@ -242,7 +241,6 @@ Both `VIDEO_PORT` and `CONTROL_PORT` must match between the two files.
   not a calibrated eye-tracking model — accuracy depends heavily on lighting
   and webcam angle.
 - There's no encryption or authentication on the UDP video/control channels or
-  the WebSocket relay beyond the Wi-Fi AP's WPA2 password; this is intended
-  for a trusted local network, not the open internet.
+  the WebSocket relay beyond the Wi-Fi AP's WPA2 password
 - If no face is detected, the gaze offset resets to center and the rig stops
   moving until a face is found again.
